@@ -1,0 +1,238 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QCM Python - 100 Questions</title>
+  <style>
+    :root{
+      --bg:#f6f7fb;--card:#ffffff;--text:#1f2937;--muted:#6b7280;--ok:#16a34a;--bad:#dc2626;--accent:#2563eb;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial}
+    header{position:sticky;top:0;background:linear-gradient(180deg,#fff,rgba(255,255,255,.92));backdrop-filter:saturate(1.2) blur(6px);border-bottom:1px solid #e5e7eb;z-index:10}
+    header .wrap{max-width:1000px;margin:0 auto;padding:14px 16px;display:flex;gap:12px;align-items:center;justify-content:space-between}
+    h1{font-size:16px;margin:0}
+    main{max-width:1000px;margin:20px auto;padding:0 16px}
+    .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 16px}
+    .btn{appearance:none;border:0;border-radius:10px;padding:10px 14px;background:var(--accent);color:#fff;cursor:pointer;font-weight:600;box-shadow:0 2px 8px rgba(37,99,235,.25)}
+    .btn.secondary{background:#111827;color:#fff}
+    .btn.ghost{background:#e5e7eb;color:#111827}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+    #result{font-weight:700}
+    .card{background:var(--card);border:1px solid #e5e7eb;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.04)}
+    .question{padding:16px 16px 10px;margin:0 0 12px}
+    .qid{font-weight:700;margin-right:6px}
+    .qtext{font-weight:600}
+    .options{margin-top:10px;display:grid;gap:6px}
+    label.opt{display:flex;gap:10px;align-items:flex-start;padding:8px;border:1px solid #e5e7eb;border-radius:10px;background:#fff}
+    label.opt input{margin-top:3px}
+    .correct{outline:2px solid var(--ok);background:#ecfdf5}
+    .incorrect{outline:2px solid var(--bad);background:#fef2f2}
+    .note{font-size:13px;color:var(--muted)}
+    details.summary{margin:14px 0}
+    .footer{margin:24px 0;color:var(--muted);font-size:13px}
+    .wrap{
+      border-radius: 15px;
+      background: orange;
+
+      
+    }
+.name{
+      border: 2px solid #ddd;   /* cadre autour du h1 */
+      padding: 10px;             /* espace entre le texte et la bordure */
+      display: inline-block;     /* pour que le cadre suive le texte */
+      border-radius: 8px;        /* coins arrondis */
+      background-color: orange; /* fond clair */
+       animation: hoverEffect 1.5s ease-in-out 3;
+}
+/* Animation qui simule hover puis retour */
+  @keyframes hoverEffect {
+    0% {
+      background: lightblue;
+      transform: scale(1);
+    }
+    50% {
+      background: orange;
+      transform: scale(1.1);
+    }
+    100% {
+      background: lightblue;
+      transform: scale(1);
+    }
+  }
+    .name:hover{
+       border: 2px solid #ccc;   /* cadre autour du h1 */
+      color: red;                /* change la couleur du texte */
+      transform: scale(1.1);     /* agrandit légèrement le texte */
+      text-shadow: 2px 2px 5px gray; /* ajoute une ombre */
+      cursor: pointer;           /* curseur en forme de main */
+      background-color: rgb(221, 194, 146);
+    }
+
+    .meta::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 100%; /* juste en dessous */
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: white;
+    opacity: 0.5;
+    transform: scaleY(-1);
+    background: linear-gradient(to top, rgba(76, 175, 80, 0.5), transparent);
+  }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1 class="name">Préparé par Ahmed Abdelmoumen</h1>
+      <h1>QCM Python – 20 Questions</h1>
+      <div class="toolbar">
+        <button class="btn" id="submitBtn">Soumettre</button>
+        <button class="btn ghost" id="resetBtn">Réinitialiser</button>
+        <button class="btn secondary" id="showAnswersBtn">Afficher le corrigé</button>
+      </div>
+    </div>
+  </header>
+  <main>
+    <div id="meta" class="card" style="padding:14px 16px;margin-bottom:12px;background:rgb(155, 231, 155)">
+      <div id="result">Sélectionne tes réponses puis clique sur « Soumettre ».</div>
+      <div class="note">Astuce : tu peux afficher le corrigé pour visualiser les bonnes réponses (A‑D). Rien n'est envoyé en ligne.</div>
+    </div>
+    <div id="quiz"></div>
+    <div class="footer">© QCM Python – généré pour un usage pédagogique.</div>
+  </main>
+
+  <script>
+    // Helper: convertir index -> lettre
+         const box = document.querySelector(".name");
+  box.classList.add("hover-simulated");
+
+  setTimeout(() => {
+    box.classList.remove("hover-simulated");
+  }, 1500); // 1,5 secondes après
+
+    const idxToLetter = i => ['A','B','C','D'][i] || '?';
+
+    // Données des 100 questions (A=0, B=1, C=2, D=3)
+    const questions = [
+      {q:"1. Quelle est la sortie de ce code ?\n x = 5\n print(x ** 2)", options:["25","10","52","Erreur"], answer:0},
+      {q:"2. Quel type retourne input() en Python ?", options:["int","float","str","bool"], answer:2},
+      {q:"3. Quelle méthode permet d’ajouter un élément à la fin d’une liste ?", options:["add()","append()","insert()","extend()"], answer:1},
+      {q:"4. Quelle est la sortie de :\n print(len(\"NSI\"))", options:["2","3","4","Erreur"], answer:1},
+      {q:"5. Que vaut 7 // 3 en Python ?", options:["2.333...","1","3","2"], answer:3},
+      {q:"6. Quel mot-clé sert à définir une fonction ?", options:["function","def","func","define"], answer:1},
+      {q:"7. Quel est le résultat de :\n L = [1,2,3]\n print(L[1])", options:["1","2","3","Erreur"], answer:1},
+      {q:"8. Quel est le type de la variable x après :\n x = 3.0", options:["int","float","str","complex"], answer:1},
+      {q:"9. Quelle est la sortie ?\n print(\"NSI\" * 3)", options:["\"NSI3\"","Erreur","\"NSI NSI NSI\"","\"NSINSINSI\""], answer:3},
+      {q:"10. Que fait l’instruction break dans une boucle ?", options:["Termine le programme","Arrête la boucle en cours","Passe à l’itération suivante","Ne fait rien"], answer:1},
+      {q:"11. Quelle est la sortie de :\n print(bool(\"\"))", options:["True","False","\"False\"","Erreur"], answer:1},
+      {q:"12. Que vaut :\n 3 in [1,2,3,4]", options:["True","False","None","Erreur"], answer:0},
+      {q:"13. Comment itérer de 0 à 9 inclus ?", options:["range(1,10)","range(0,9)","range(10)","range(10,0)"], answer:2},
+      {q:"14. Quel est le résultat ?\n print(\"bonjour\".upper())", options:["\"BONJOUR\"","\"Bonjour\"","\"bonjour\"","Erreur"], answer:0},
+      {q:"15. Quelle fonction donne le plus grand élément d’une liste ?", 
+      options:["maximum()","max()","largest()","sup()"], answer:1},
+      {q:"16. Quel est le résultat de :\n print(type([1,2,3]))", 
+     options:["< class 'tuple' >","< class 'list' >","< class 'array' >","< class 'dict'>" ], answer:1},
+      {q:"17. Que fait L.pop() sur une liste L ?", options:["Supprime le premier élément","Supprime le dernier élément et le retourne","Supprime un élément donné","Vide la liste"], answer:1},
+      {q:"18. Quelle est la sortie ?\n d = {\"a\":1, \"b\":2}\n print(d[\"b\"]) ", options:["a","1","2","Erreur"], answer:2},
+      {q:"19. Quel opérateur teste l’égalité en Python ?", options:["=","==","===","eq"], answer:1},
+      {q:"20. Quelle est la sortie ?\n print(2**3**2)", options:["64","512","36","Erreur"], answer:1},
+      ]
+    
+    // Rendu des questions
+    const quizDiv = document.getElementById('quiz');
+
+    
+    function render(){
+      quizDiv.innerHTML = '';
+      questions.forEach((q,i)=>{
+        const wrap = document.createElement('section');
+        wrap.className = 'card question';
+        const qid = document.createElement('div');
+        qid.innerHTML = `<span class="qid">Q${i+1}</span><span class="qtext">${q.q.replace(/\n/g,'<br>')}</span>`;
+        const opts = document.createElement('div');
+        opts.className = 'options';
+        q.options.forEach((opt,j)=>{
+          const id = `q${i}_opt${j}`;
+          const label = document.createElement('label');
+          label.className = 'opt';
+          label.innerHTML = `<input type="radio" name="q${i}" id="${id}" value="${j}"> <span><strong>${idxToLetter(j)}.</strong> ${opt}</span>`;
+          opts.appendChild(label);
+        });
+        wrap.appendChild(qid); wrap.appendChild(opts);
+        quizDiv.appendChild(wrap);
+      });
+    }
+    render();
+
+    function evaluate(showCorrections=true){
+      showMirror();
+      let score = 0;
+      const nodes = [...document.querySelectorAll('.question')];
+      nodes.forEach((node, i)=>{
+        node.classList.remove('correct','incorrect');
+        const chosen = document.querySelector(`input[name="q${i}"]:checked`);
+        const ans = questions[i].answer;
+        if(chosen){
+          const val = parseInt(chosen.value,10);
+          if(val === ans){
+            score++;
+            if(showCorrections) node.classList.add('correct');
+          }else{
+            if(showCorrections){
+              node.classList.add('incorrect');
+              // marquer la bonne option
+              const good = node.querySelector(`input[value="${ans}"]`).parentElement;
+              good.style.outline = '2px solid var(--ok)';
+            }
+          }
+        }else if(showCorrections){
+          // Non répondu -> indiquer la bonne réponse
+          node.classList.add('incorrect');
+          const good = node.querySelector(`input[value="${ans}"]`).parentElement;
+          good.style.outline = '2px solid var(--ok)';
+        }
+      });
+      const pct = Math.round((score / questions.length) * 100);
+      document.getElementById('result').textContent = `Score : ${score} / ${questions.length} (${pct}%)`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+    }
+
+    function resetAll(){
+      document.querySelectorAll('input[type="radio"]').forEach(i=>{ i.checked = false; });
+      document.querySelectorAll('.question').forEach(q=>{
+        q.classList.remove('correct','incorrect');
+        q.querySelectorAll('.opt').forEach(o=> o.style.outline = '');
+      });
+      document.getElementById('result').textContent = 'Sélectionne tes réponses puis clique sur « Soumettre ».';
+    }
+
+    function showAnswers(){
+      // coche automatiquement la bonne réponse
+      questions.forEach((q,i)=>{
+        const good = document.querySelector(`input[name="q${i}"][value="${q.answer}"]`);
+        if(good) good.checked = true;
+      });
+      evaluate(true);
+    }
+    function showMirror() {
+      /*alert("bonjour");*/
+    const div = document.getElementById('meta');
+    div.style.display = 'block';
+    div.style.background='#eaa';
+    }
+
+    document.getElementById('submitBtn').addEventListener('click', ()=> evaluate(true));
+    document.getElementById('resetBtn').addEventListener('click', resetAll);
+    document.getElementById('showAnswersBtn').addEventListener('click', showAnswers);
+
+
+
+  </script>
+</body>
+</html>
